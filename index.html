@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CryptoPro Terminal</title>
+  <!-- Fullscreen iOS WebApp configuration -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="CryptoPro">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="apple-touch-icon" href="AppIcon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="AppIcon.png">
+
+  <style>
+    * {
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    body {
+      background-color: #131722;
+      color: #d1d4dc;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      overflow: hidden;
+      width: 100%;
+      height: 100%;
+      position: fixed;
+    }
+
+    /* Header Bar */
+    #top-bar {
+      height: 52px;
+      background-color: #1e222d;
+      border-bottom: 1px solid #2a2e39;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+      align-items: center;
+      padding: 0 12px;
+    }
+
+    .app-brand {
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: 1px;
+      color: #2962ff;
+      margin-right: 14px;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+      align-items: center;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #089981;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 6px;
+      box-shadow: 0 0 8px #089981;
+    }
+
+    .symbol-info {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-box-align: baseline;
+      -webkit-align-items: baseline;
+      align-items: baseline;
+    }
+
+    .symbol-name {
+      font-size: 16px;
+      font-weight: bold;
+      color: #ffffff;
+      margin-right: 8px;
+    }
+
+    .live-price {
+      font-size: 18px;
+      font-weight: bold;
+      margin-right: 8px;
+      letter-spacing: 0.5px;
+      transition: color 0.2s;
+    }
+
+    .price-change {
+      font-size: 13px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .up {
+      color: #089981;
+    }
+    .down {
+      color: #f23645;
+    }
+    .up-badge {
+      background-color: rgba(8, 153, 129, 0.15);
+      color: #089981;
+    }
+    .down-badge {
+      background-color: rgba(242, 54, 69, 0.15);
+      color: #f23645;
+    }
+
+    .stats-group {
+      margin-left: auto;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+      font-size: 11px;
+      color: #787b86;
+    }
+
+    .stat-item {
+      margin-left: 12px;
+      text-align: right;
+    }
+    .stat-label {
+      display: block;
+      font-size: 9px;
+      text-transform: uppercase;
+    }
+    .stat-val {
+      color: #d1d4dc;
+      font-weight: 600;
+    }
+
+    /* Sub-bar: Timeframe & Chart Style Toolbar */
+    #toolbar {
+      height: 38px;
+      background-color: #181b24;
+      border-bottom: 1px solid #2a2e39;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+      align-items: center;
+      padding: 0 10px;
+    }
+
+    .btn-group {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+      margin-right: 14px;
+    }
+
+    .tool-btn {
+      background: none;
+      border: none;
+      color: #787b86;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 4px;
+      margin-right: 2px;
+    }
+    .tool-btn:active, .tool-btn.active {
+      background-color: #2a2e39;
+      color: #ffffff;
+    }
+
+    .divider {
+      width: 1px;
+      height: 18px;
+      background-color: #2a2e39;
+      margin: 0 8px;
+    }
+
+    /* Watchlist Horizontal Strip */
+    #watchlist {
+      height: 44px;
+      background-color: #1e222d;
+      border-top: 1px solid #2a2e39;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 4px 6px;
+      white-space: nowrap;
+    }
+
+    .watch-card {
+      display: inline-block;
+      padding: 4px 10px;
+      margin: 0 4px;
+      background-color: #131722;
+      border: 1px solid #2a2e39;
+      border-radius: 5px;
+      cursor: pointer;
+      min-width: 105px;
+    }
+    .watch-card.active {
+      border-color: #2962ff;
+      background-color: #1c2538;
+    }
+    .watch-sym {
+      font-size: 11px;
+      font-weight: bold;
+      color: #ffffff;
+    }
+    .watch-price {
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 1px;
+    }
+    .watch-chg {
+      font-size: 10px;
+      margin-left: 4px;
+    }
+
+    /* Main Chart Area */
+    #chart-container {
+      position: relative;
+      width: 100%;
+      /* Dynamic height handled by JS */
+      background-color: #131722;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Crosshair Tooltip HUD */
+    #hud {
+      position: absolute;
+      top: 10px;
+      left: 12px;
+      background: rgba(30, 34, 45, 0.85);
+      border: 1px solid #2a2e39;
+      border-radius: 4px;
+      padding: 6px 10px;
+      font-size: 11px;
+      pointer-events: none;
+      display: none;
+      z-index: 10;
+      line-height: 1.5;
+    }
+    .hud-title {
+      color: #787b86;
+      margin-bottom: 2px;
+      font-size: 10px;
+    }
+    .hud-val {
+      font-weight: 600;
+      color: #ffffff;
+      margin-right: 8px;
+    }
+
+    /* Status & Loading Overlay */
+    #status-msg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -webkit-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+      color: #787b86;
+      font-size: 14px;
+      font-weight: 600;
+      pointer-events: none;
+    }
+
+    /* Home screen helper banner */
+    #ios-tip {
+      position: absolute;
+      bottom: 50px;
+      left: 50%;
+      -webkit-transform: translateX(-50%);
+      transform: translateX(-50%);
+      background: rgba(41, 98, 255, 0.95);
+      color: #ffffff;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: bold;
+      z-index: 99;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header -->
+  <div id="top-bar">
+    <div class="app-brand">
+      <span class="live-dot" id="live-dot"></span>
+      <span>CRYPTOPRO</span>
+    </div>
+
+    <div class="symbol-info">
+      <span class="symbol-name" id="disp-symbol">BTC/USDT</span>
+      <span class="live-price" id="disp-price">---</span>
+      <span class="price-change up-badge" id="disp-change">---</span>
+    </div>
+
+    <div class="stats-group">
+      <div class="stat-item">
+        <span class="stat-label">24h High</span>
+        <span class="stat-val" id="disp-high">---</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">24h Low</span>
+        <span class="stat-val" id="disp-low">---</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">24h Volume</span>
+        <span class="stat-val" id="disp-vol">---</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toolbar: Intervals & Styles -->
+  <div id="toolbar">
+    <div class="btn-group" id="interval-group">
+      <button class="tool-btn" data-int="1m">1m</button>
+      <button class="tool-btn" data-int="5m">5m</button>
+      <button class="tool-btn active" data-int="15m">15m</button>
+      <button class="tool-btn" data-int="1h">1h</button>
+      <button class="tool-btn" data-int="4h">4h</button>
+      <button class="tool-btn" data-int="1d">1D</button>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="btn-group" id="style-group">
+      <button class="tool-btn active" data-style="candles">Candles</button>
+      <button class="tool-btn" data-style="line">Line Area</button>
+    </div>
+
+    <div style="margin-left: auto; font-size: 11px; color: #787b86;">
+      <span id="update-timer">Ready</span>
+    </div>
+  </div>
+
+  <!-- Chart Container -->
+  <div id="chart-container">
+    <canvas id="chart-canvas"></canvas>
+    <div id="hud"></div>
+    <div id="status-msg">Connecting to live feed...</div>
+  </div>
+
+  <!-- Watchlist Footer -->
+  <div id="watchlist"></div>
+
+  <!-- iOS Tip -->
+  <div id="ios-tip">Tip: Tap Safari Share icon &rarr; "Add to Home Screen" for Fullscreen App</div>
+
+  <script>
+    /*
+      STRICT ES5 JAVASCRIPT - 100% COMPATIBLE WITH iOS 9 SAFARI
+      No let, const, arrow functions, template literals, or modern polyfills.
+    */
+    (function () {
+      // Configuration
+      var WATCHLIST = [
+        { symbol: "BTCUSDT", name: "BTC" },
+        { symbol: "ETHUSDT", name: "ETH" },
+        { symbol: "SOLUSDT", name: "SOL" },
+        { symbol: "BNBUSDT", name: "BNB" },
+        { symbol: "XRPUSDT", name: "XRP" },
+        { symbol: "DOGEUSDT", name: "DOGE" },
+        { symbol: "ADAUSDT", name: "ADA" },
+        { symbol: "AVAXUSDT", name: "AVAX" },
+        { symbol: "NEARUSDT", name: "NEAR" },
+        { symbol: "SUIUSDT", name: "SUI" }
+      ];
+
+      var state = {
+        symbol: "BTCUSDT",
+        symbolName: "BTC",
+        interval: "15m",
+        chartStyle: "candles", // 'candles' or 'line'
+        candles: [],
+        ticker: null,
+        watchPrices: {},
+        crosshair: null, // { x, y }
+        lastPrice: 0,
+        isRetina: window.devicePixelRatio && window.devicePixelRatio > 1 ? window.devicePixelRatio : 1
+      };
+
+      // DOM Elements
+      var canvas = document.getElementById("chart-canvas");
+      var ctx = canvas.getContext("2d");
+      var container = document.getElementById("chart-container");
+      var hud = document.getElementById("hud");
+      var statusMsg = document.getElementById("status-msg");
+      var dispSymbol = document.getElementById("disp-symbol");
+      var dispPrice = document.getElementById("disp-price");
+      var dispChange = document.getElementById("disp-change");
+      var dispHigh = document.getElementById("disp-high");
+      var dispLow = document.getElementById("disp-low");
+      var dispVol = document.getElementById("disp-vol");
+      var updateTimer = document.getElementById("update-timer");
+      var watchlistEl = document.getElementById("watchlist");
+      var liveDot = document.getElementById("live-dot");
+
+      // Check if standalone webapp
+      if (!window.navigator.standalone) {
+        var tip = document.getElementById("ios-tip");
+        if (tip) {
+          tip.style.display = "block";
+          setTimeout(function () {
+            tip.style.display = "none";
+          }, 8000);
+        }
+      }
+
+      // XHR Helper for ES5
+      function ajaxGet(url, successCallback, errorCallback) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url, true);
+        xhr.timeout = 8000;
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4) {
+            if (xhr.status >= 200 && xhr.status < 300) {
+              try {
+                var json = JSON.parse(xhr.responseText);
+                successCallback(json);
+              } catch (e) {
+                if (errorCallback) errorCallback(e);
+              }
+            } else {
+              if (errorCallback) errorCallback("HTTP " + xhr.status);
+            }
+          }
+        };
+        xhr.ontimeout = function () {
+          if (errorCallback) errorCallback("Timeout");
+        };
+        xhr.onerror = function (e) {
+          if (errorCallback) errorCallback("Network Error");
+        };
+        xhr.send(null);
+      }
+
+      // Formatting numbers (Ultra-safe ES5 regex, no Intl dependency)
+      function formatPrice(val) {
+        var num = parseFloat(val);
+        if (isNaN(num)) return "---";
+        if (num >= 1000) {
+          var parts = num.toFixed(2).split(".");
+          parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+          return "$" + parts.join(".");
+        } else if (num >= 1) {
+          return "$" + num.toFixed(3);
+        } else {
+          return "$" + num.toFixed(5);
+        }
+      }
+
+      function formatVolume(val) {
+        var num = parseFloat(val);
+        if (isNaN(num)) return "---";
+        if (num >= 1e9) return "$" + (num / 1e9).toFixed(2) + "B";
+        if (num >= 1e6) return "$" + (num / 1e6).toFixed(2) + "M";
+        if (num >= 1e3) return "$" + (num / 1e3).toFixed(2) + "K";
+        return "$" + num.toFixed(0);
+      }
+
+      function formatTime(timestamp, intv) {
+        var d = new Date(timestamp);
+        var h = ("0" + d.getHours()).slice(-2);
+        var m = ("0" + d.getMinutes()).slice(-2);
+        if (intv === "1d") {
+          return (d.getMonth() + 1) + "/" + d.getDate();
+        }
+        return h + ":" + m;
+      }
+
+      // Resize Canvas
+      function resizeCanvas() {
+        var topH = document.getElementById("top-bar").offsetHeight;
+        var toolH = document.getElementById("toolbar").offsetHeight;
+        var watchH = document.getElementById("watchlist").offsetHeight;
+        var windowH = window.innerHeight || document.documentElement.clientHeight;
+        var availableH = windowH - topH - toolH - watchH;
+
+        if (availableH < 200) availableH = 200;
+        container.style.height = availableH + "px";
+
+        var dpr = state.isRetina;
+        var rect = container.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        canvas.style.width = rect.width + "px";
+        canvas.style.height = rect.height + "px";
+
+        drawChart();
+      }
+
+      // Build Watchlist Cards
+      function initWatchlist() {
+        watchlistEl.innerHTML = "";
+        for (var i = 0; i < WATCHLIST.length; i++) {
+          var item = WATCHLIST[i];
+          var card = document.createElement("div");
+          card.className = "watch-card" + (item.symbol === state.symbol ? " active" : "");
+          card.id = "card-" + item.symbol;
+          card.setAttribute("data-symbol", item.symbol);
+          card.setAttribute("data-name", item.name);
+
+          card.innerHTML = 
+            '<div class="watch-sym">' + item.name + '/USDT</div>' +
+            '<div class="watch-price" id="wprice-' + item.symbol + '">---</div>' +
+            '<div class="watch-chg" id="wchg-' + item.symbol + '">--%</div>';
+
+          (function (sym, sName) {
+            card.onclick = function () {
+              switchSymbol(sym, sName);
+            };
+          })(item.symbol, item.name);
+
+          watchlistEl.appendChild(card);
+        }
+      }
+
+      // Switch active symbol
+      function switchSymbol(symbol, name) {
+        state.symbol = symbol;
+        state.symbolName = name;
+        dispSymbol.innerText = name + "/USDT";
+        statusMsg.innerText = "Loading " + name + "...";
+        statusMsg.style.display = "block";
+        state.candles = [];
+        state.crosshair = null;
+        hud.style.display = "none";
+
+        // update active class
+        var cards = document.getElementsByClassName("watch-card");
+        for (var i = 0; i < cards.length; i++) {
+          cards[i].className = cards[i].getAttribute("data-symbol") === symbol ? "watch-card active" : "watch-card";
+        }
+
+        fetchTicker();
+        fetchKlines();
+      }
+
+      // Fetch 24h Ticker for Active Symbol
+      function fetchTicker() {
+        var url = "https://api.binance.com/api/v3/ticker/24hr?symbol=" + state.symbol;
+        ajaxGet(url, function (data) {
+          state.ticker = data;
+          var curPrice = parseFloat(data.lastPrice);
+          var chg = parseFloat(data.priceChangePercent);
+
+          dispPrice.innerText = formatPrice(curPrice);
+          dispHigh.innerText = formatPrice(data.highPrice);
+          dispLow.innerText = formatPrice(data.lowPrice);
+          dispVol.innerText = formatVolume(data.quoteVolume);
+
+          var chgSign = chg >= 0 ? "+" : "";
+          dispChange.innerText = chgSign + chg.toFixed(2) + "%";
+          dispChange.className = chg >= 0 ? "price-change up-badge" : "price-change down-badge";
+
+          // Flash tick color
+          if (state.lastPrice > 0) {
+            if (curPrice > state.lastPrice) {
+              dispPrice.style.color = "#089981";
+            } else if (curPrice < state.lastPrice) {
+              dispPrice.style.color = "#f23645";
+            }
+            setTimeout(function () {
+              dispPrice.style.color = "#ffffff";
+            }, 600);
+          }
+          state.lastPrice = curPrice;
+        });
+      }
+
+      // Fetch Watchlist Prices
+      function fetchWatchlistPrices() {
+        var url = "https://api.binance.com/api/v3/ticker/24hr";
+        ajaxGet(url, function (tickers) {
+          for (var i = 0; i < tickers.length; i++) {
+            var t = tickers[i];
+            var pEl = document.getElementById("wprice-" + t.symbol);
+            var cEl = document.getElementById("wchg-" + t.symbol);
+            if (pEl && cEl) {
+              var p = parseFloat(t.lastPrice);
+              var c = parseFloat(t.priceChangePercent);
+              pEl.innerText = formatPrice(p);
+              var sign = c >= 0 ? "+" : "";
+              cEl.innerText = sign + c.toFixed(2) + "%";
+              cEl.className = "watch-chg " + (c >= 0 ? "up" : "down");
+            }
+          }
+        });
+      }
+
+      // Fetch Klines (Candlestick data)
+      function fetchKlines() {
+        var limit = 60; // Optimal performance for 512MB RAM
+        var url = "https://api.binance.com/api/v3/klines?symbol=" + state.symbol + "&interval=" + state.interval + "&limit=" + limit;
+
+        ajaxGet(url, function (data) {
+          statusMsg.style.display = "none";
+          var parsed = [];
+          for (var i = 0; i < data.length; i++) {
+            var row = data[i];
+            parsed.push({
+              time: row[0],
+              open: parseFloat(row[1]),
+              high: parseFloat(row[2]),
+              low: parseFloat(row[3]),
+              close: parseFloat(row[4]),
+              vol: parseFloat(row[5])
+            });
+          }
+          state.candles = parsed;
+          drawChart();
+
+          var now = new Date();
+          var timeStr = ("0" + now.getHours()).slice(-2) + ":" + ("0" + now.getMinutes()).slice(-2) + ":" + ("0" + now.getSeconds()).slice(-2);
+          updateTimer.innerText = "Updated " + timeStr;
+        }, function (err) {
+          statusMsg.innerText = "Connection Error (" + err + ")";
+          statusMsg.style.display = "block";
+        });
+      }
+
+      // Main Chart Rendering Routine
+      function drawChart() {
+        if (!state.candles || state.candles.length === 0) return;
+
+        var dpr = state.isRetina;
+        var w = canvas.width / dpr;
+        var h = canvas.height / dpr;
+
+        ctx.save();
+        ctx.scale(dpr, dpr);
+        ctx.clearRect(0, 0, w, h);
+
+        // Chart Boundaries & Margins
+        var paddingRight = 65; // Price scale
+        var paddingBottom = 26; // Time scale
+        var paddingTop = 20;
+        var paddingLeft = 10;
+
+        var chartW = w - paddingRight - paddingLeft;
+        var chartH = h - paddingTop - paddingBottom;
+
+        // Calculate min & max price
+        var minP = Infinity;
+        var maxP = -Infinity;
+        var candles = state.candles;
+
+        for (var i = 0; i < candles.length; i++) {
+          if (candles[i].low < minP) minP = candles[i].low;
+          if (candles[i].high > maxP) maxP = candles[i].high;
+        }
+
+        // Add 5% top/bottom breathing margin
+        var diff = maxP - minP;
+        if (diff === 0) diff = 1;
+        minP = minP - diff * 0.05;
+        maxP = maxP + diff * 0.05;
+        var pRange = maxP - minP;
+
+        // Coordinate transforms
+        function getX(index) {
+          return paddingLeft + (index + 0.5) * (chartW / candles.length);
+        }
+        function getY(price) {
+          return paddingTop + chartH - ((price - minP) / pRange) * chartH;
+        }
+
+        // 1. Draw Background Grid Lines (Horizontal & Vertical)
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "rgba(42, 46, 57, 0.6)";
+
+        // Horizontal Grid (Price levels)
+        var gridCount = 5;
+        ctx.textAlign = "left";
+        ctx.font = "10px -apple-system, sans-serif";
+        ctx.fillStyle = "#787b86";
+
+        for (var g = 0; g <= gridCount; g++) {
+          var yPos = paddingTop + (chartH / gridCount) * g;
+          ctx.beginPath();
+          ctx.moveTo(paddingLeft, yPos);
+          ctx.lineTo(w - paddingRight, yPos);
+          ctx.stroke();
+
+          // Price label on right axis
+          var pVal = maxP - (pRange / gridCount) * g;
+          ctx.fillText(formatPrice(pVal).replace("$", ""), w - paddingRight + 6, yPos + 3);
+        }
+
+        // Vertical Grid (Time marks)
+        var timeStep = Math.floor(candles.length / 5);
+        if (timeStep < 1) timeStep = 1;
+        ctx.textAlign = "center";
+
+        for (var t = 0; t < candles.length; t += timeStep) {
+          var xPos = getX(t);
+          ctx.beginPath();
+          ctx.moveTo(xPos, paddingTop);
+          ctx.lineTo(xPos, paddingTop + chartH);
+          ctx.stroke();
+
+          // Time label on bottom axis
+          var tLabel = formatTime(candles[t].time, state.interval);
+          ctx.fillText(tLabel, xPos, h - 8);
+        }
+
+        // 2. Render Chart Data (Candlesticks or Line Area)
+        var candleW = (chartW / candles.length) * 0.72;
+        if (candleW < 2) candleW = 2;
+
+        if (state.chartStyle === "candles") {
+          // --- CANDLESTICKS ---
+          for (var c = 0; c < candles.length; c++) {
+            var cd = candles[c];
+            var cx = getX(c);
+            var yOpen = getY(cd.open);
+            var yClose = getY(cd.close);
+            var yHigh = getY(cd.high);
+            var yLow = getY(cd.low);
+
+            var isUp = cd.close >= cd.open;
+            var color = isUp ? "#089981" : "#f23645";
+
+            // Wick
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            ctx.moveTo(cx, yHigh);
+            ctx.lineTo(cx, yLow);
+            ctx.stroke();
+
+            // Candle Body
+            var bodyTop = Math.min(yOpen, yClose);
+            var bodyH = Math.abs(yClose - yOpen);
+            if (bodyH < 1) bodyH = 1;
+
+            ctx.fillStyle = color;
+            ctx.fillRect(cx - candleW / 2, bodyTop, candleW, bodyH);
+          }
+        } else {
+          // --- LINE / AREA CHART ---
+          // Area Gradient Fill
+          var grad = ctx.createLinearGradient(0, paddingTop, 0, paddingTop + chartH);
+          grad.addColorStop(0, "rgba(41, 98, 255, 0.4)");
+          grad.addColorStop(1, "rgba(41, 98, 255, 0.0)");
+
+          ctx.beginPath();
+          ctx.moveTo(getX(0), paddingTop + chartH);
+          for (var l = 0; l < candles.length; l++) {
+            ctx.lineTo(getX(l), getY(candles[l].close));
+          }
+          ctx.lineTo(getX(candles.length - 1), paddingTop + chartH);
+          ctx.closePath();
+          ctx.fillStyle = grad;
+          ctx.fill();
+
+          // Stroke line
+          ctx.beginPath();
+          ctx.strokeStyle = "#2962ff";
+          ctx.lineWidth = 2;
+          for (var s = 0; s < candles.length; s++) {
+            var px = getX(s);
+            var py = getY(candles[s].close);
+            if (s === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          ctx.stroke();
+        }
+
+        // 3. Current Live Price Line & Right Badge
+        var latestCandle = candles[candles.length - 1];
+        var liveY = getY(latestCandle.close);
+        var isUpNow = latestCandle.close >= latestCandle.open;
+        var badgeColor = isUpNow ? "#089981" : "#f23645";
+
+        // Dashed line across chart
+        ctx.save();
+        if (ctx.setLineDash) {
+          ctx.setLineDash([4, 4]);
+        }
+        ctx.strokeStyle = badgeColor;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(paddingLeft, liveY);
+        ctx.lineTo(w - paddingRight, liveY);
+        ctx.stroke();
+        ctx.restore();
+
+        // Glowing badge on right axis
+        ctx.fillStyle = badgeColor;
+        ctx.fillRect(w - paddingRight, liveY - 9, paddingRight - 4, 18);
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 10px -apple-system, sans-serif";
+        ctx.textAlign = "left";
+        ctx.fillText(formatPrice(latestCandle.close).replace("$", ""), w - paddingRight + 5, liveY + 4);
+
+        // 4. Crosshair & HUD Inspection
+        if (state.crosshair) {
+          var chX = state.crosshair.x;
+          var chY = state.crosshair.y;
+
+          // Find closest candle
+          var closestIdx = 0;
+          var minDist = Infinity;
+          for (var k = 0; k < candles.length; k++) {
+            var dist = Math.abs(getX(k) - chX);
+            if (dist < minDist) {
+              minDist = dist;
+              closestIdx = k;
+            }
+          }
+
+          var targetCandle = candles[closestIdx];
+          var targetX = getX(closestIdx);
+
+          // Draw dashed crosshair lines
+          ctx.save();
+          if (ctx.setLineDash) {
+            ctx.setLineDash([3, 3]);
+          }
+          ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
+          ctx.lineWidth = 1;
+
+          // Vertical
+          ctx.beginPath();
+          ctx.moveTo(targetX, paddingTop);
+          ctx.lineTo(targetX, paddingTop + chartH);
+          ctx.stroke();
+
+          // Horizontal
+          if (chY >= paddingTop && chY <= paddingTop + chartH) {
+            ctx.beginPath();
+            ctx.moveTo(paddingLeft, chY);
+            ctx.lineTo(w - paddingRight, chY);
+            ctx.stroke();
+
+            // Price badge on crosshair Y
+            var hoveredP = maxP - ((chY - paddingTop) / chartH) * pRange;
+            ctx.fillStyle = "#363a45";
+            ctx.fillRect(w - paddingRight, chY - 8, paddingRight - 4, 16);
+            ctx.fillStyle = "#ffffff";
+            ctx.fillText(formatPrice(hoveredP).replace("$", ""), w - paddingRight + 5, chY + 4);
+          }
+          ctx.restore();
+
+          // Update floating HUD
+          var cdChg = ((targetCandle.close - targetCandle.open) / targetCandle.open) * 100;
+          var cdSign = cdChg >= 0 ? "+" : "";
+          var chgColor = cdChg >= 0 ? "#089981" : "#f23645";
+
+          hud.innerHTML = 
+            '<div class="hud-title">' + new Date(targetCandle.time).toLocaleString() + '</div>' +
+            '<span>O:</span> <span class="hud-val">' + formatPrice(targetCandle.open) + '</span> ' +
+            '<span>H:</span> <span class="hud-val">' + formatPrice(targetCandle.high) + '</span> ' +
+            '<span>L:</span> <span class="hud-val">' + formatPrice(targetCandle.low) + '</span> ' +
+            '<span>C:</span> <span class="hud-val" style="color:' + chgColor + '">' + formatPrice(targetCandle.close) + ' (' + cdSign + cdChg.toFixed(2) + '%)</span>';
+          hud.style.display = "block";
+        }
+
+        ctx.restore();
+      }
+
+      // Setup Crosshair Touch & Pointer Listeners
+      function initCrosshair() {
+        function updatePos(clientX, clientY) {
+          var rect = canvas.getBoundingClientRect();
+          state.crosshair = {
+            x: clientX - rect.left,
+            y: clientY - rect.top
+          };
+          drawChart();
+        }
+
+        function clearPos() {
+          state.crosshair = null;
+          hud.style.display = "none";
+          drawChart();
+        }
+
+        // Mouse events (Desktop testing)
+        canvas.addEventListener("mousemove", function (e) {
+          updatePos(e.clientX, e.clientY);
+        }, false);
+
+        canvas.addEventListener("mouseleave", function () {
+          clearPos();
+        }, false);
+
+        // Touch events (iOS Safari)
+        canvas.addEventListener("touchstart", function (e) {
+          if (e.touches && e.touches.length > 0) {
+            e.preventDefault();
+            updatePos(e.touches[0].clientX, e.touches[0].clientY);
+          }
+        }, false);
+
+        canvas.addEventListener("touchmove", function (e) {
+          if (e.touches && e.touches.length > 0) {
+            e.preventDefault();
+            updatePos(e.touches[0].clientX, e.touches[0].clientY);
+          }
+        }, false);
+
+        canvas.addEventListener("touchend", function () {
+          // Delay clear so user can read value on tap
+          setTimeout(function () {
+            clearPos();
+          }, 3000);
+        }, false);
+      }
+
+      // Setup Toolbar Event Listeners
+      function initToolbar() {
+        // Interval buttons
+        var intButtons = document.getElementById("interval-group").getElementsByTagName("button");
+        for (var i = 0; i < intButtons.length; i++) {
+          (function (btn) {
+            btn.onclick = function () {
+              for (var j = 0; j < intButtons.length; j++) intButtons[j].className = "tool-btn";
+              btn.className = "tool-btn active";
+              state.interval = btn.getAttribute("data-int");
+              statusMsg.innerText = "Switching to " + state.interval + "...";
+              statusMsg.style.display = "block";
+              fetchKlines();
+            };
+          })(intButtons[i]);
+        }
+
+        // Style buttons (Candles / Line)
+        var styleButtons = document.getElementById("style-group").getElementsByTagName("button");
+        for (var k = 0; k < styleButtons.length; k++) {
+          (function (btn) {
+            btn.onclick = function () {
+              for (var j = 0; j < styleButtons.length; j++) styleButtons[j].className = "tool-btn";
+              btn.className = "tool-btn active";
+              state.chartStyle = btn.getAttribute("data-style");
+              drawChart();
+            };
+          })(styleButtons[k]);
+        }
+      }
+
+      // Initial Launch
+      window.onload = function () {
+        initWatchlist();
+        initToolbar();
+        initCrosshair();
+        resizeCanvas();
+
+        window.onresize = function () {
+          resizeCanvas();
+        };
+
+        // First data pull
+        fetchTicker();
+        fetchKlines();
+        fetchWatchlistPrices();
+
+        // Real-time polling loop
+        // Active coin ticker every 2.5 seconds
+        setInterval(function () {
+          fetchTicker();
+        }, 2500);
+
+        // Chart klines update every 6 seconds
+        setInterval(function () {
+          fetchKlines();
+        }, 6000);
+
+        // Watchlist update every 12 seconds
+        setInterval(function () {
+          fetchWatchlistPrices();
+        }, 12000);
+      };
+
+    })();
+  </script>
+</body>
+</html>
